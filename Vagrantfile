@@ -1,0 +1,58 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+
+Vagrant.configure(2) do |config|
+
+  ##### configuration parameters #####
+  #HOST_PORT = "2222" #which host-port forward to guest-port
+  #GUEST_PORT = "22" #which guest-port will be forward from host-port
+  HOST_NAME = "gitlab"
+  BOX_BASE = "box.centos7" #Vagrant base box to use
+  BOX_NAME = "gitlab" #name of box
+  BOX_RAM_MB = "4096" #amount of RAM
+  BOX_CPU_CORE = "2" #number of CPUs
+  NodeCount = 1 #number of node to deploy
+  ##### end configuration parameters #####
+
+	##which host-port forward to box-port
+	#config.vm.network "forwarded_port", guest: "#{GUEST_PORT}", host: "#{HOST_PORT}"
+
+  #disable default /vagrant share
+	config.vm.synced_folder ".", "/vagrant", disabled: true
+
+	##ssh key-based authentication
+	config.ssh.insert_key = false
+  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+
+	##If install VirtualBox Guest Additions set auto_update to "TRUE" or running command "vagrant vbguest --do install"
+	##must install ==> vagrant plugin install vagrant-vbguest
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote = true
+  end
+
+	##run bootstrap script
+	#config.vm.provision "shell", path: "bootstrap.sh"
+
+	##deploy vm
+  (1..NodeCount).each do |i|
+	  config.vm.define "#{BOX_NAME}#{i}" do |node|
+      node.vm.box = BOX_BASE
+      node.vm.hostname = "#{HOST_NAME}#{i}.testlab.local"
+      node.vm.network "public_network", ip: "192.168.16.161", bridge: "eno1"
+
+	    ##provision resources to vm
+	    node.vm.provider "virtualbox" do |vb|
+        vb.name = "#{BOX_NAME}#{i}"
+        vb.memory = BOX_RAM_MB
+        vb.cpus = BOX_CPU_CORE
+		    vb.customize ["modifyvm", :id, "--audio", "none"]
+      end
+	    ##run bootstrap script
+	    node.vm.provision "shell", path: "bootstrap.sh"
+	  end
+  end
+end
