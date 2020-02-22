@@ -48,23 +48,10 @@ echo ">>>>> [TASK] Install Gitlab-CE on CentOS 7"
 yum -y install curl policycoreutils-python openssh-server >/dev/null 2>&1
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash >/dev/null 2>&1
 yum -y install gitlab-ce >/dev/null 2>&1
-<<<<<<< HEAD
-=======
-mkdir /etc/gitlab/ssl
-chmod 700 /etc/gitlab/ssl
-cp ~/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
-cp ~/testlab.key /etc/gitlab/ssl/gitlab1.testlab.local.key
-chmod 600 /etc/gitlab/ssl/gitlab1.testlab.local.*
-cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.origin
-cp /home/vagrant/gitlab.rb /etc/gitlab/gitlab.rb -f
-gitlab-ctl reconfigure >/dev/null 2>&1
-gitlab-ctl restart
->>>>>>> ed3e2348280cbea72bef5047035ea29b70757250
 ## open firewalld allow http/https
 #firewall-cmd --permanent --add-service=http
 #firewall-cmd --permanent --add-service=https
 #systemctl reload firewalld
-<<<<<<< HEAD
 mkdir /etc/gitlab/ssl
 chmod 700 /etc/gitlab/ssl
 cp /home/vagrant/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
@@ -75,9 +62,6 @@ cp /home/vagrant/gitlab.rb /etc/gitlab/gitlab.rb -f
 gitlab-ctl reconfigure >/dev/null 2>&1
 gitlab-ctl restart
 ## Install postfix
-=======
-## install postfix
->>>>>>> ed3e2348280cbea72bef5047035ea29b70757250
 yum -y install postfix >/dev/null 2>&1
 systemctl daemon-reload
 systemctl start postfix
