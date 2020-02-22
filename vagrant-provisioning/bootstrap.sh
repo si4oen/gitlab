@@ -54,8 +54,8 @@ yum -y install gitlab-ce >/dev/null 2>&1
 #systemctl reload firewalld
 mkdir /etc/gitlab/ssl
 chmod 700 /etc/gitlab/ssl
-cp ~/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
-cp ~/testlab.key /etc/gitlab/ssl/gitlab1.testlab.local.key
+cp /home/vagrant/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
+cp /home/vagrant/testlab.key /etc/gitlab/ssl/gitlab1.testlab.local.key
 chmod 600 /etc/gitlab/ssl/gitlab1.testlab.local.*
 cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.origin
 cp /home/vagrant/gitlab.rb /etc/gitlab/gitlab.rb -f
