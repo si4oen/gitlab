@@ -43,11 +43,11 @@ cat >>/etc/hosts<<EOF
 192.168.16.132 kworker2.testlab.local kworker2
 EOF
 
-## Install Gitlab on CentOS 7
-echo ">>>>> [TASK] Install Gitlab on CentOS 7"
+## Install Gitlab-CE on CentOS 7
+echo ">>>>> [TASK] Install Gitlab-CE on CentOS 7"
 yum -y install curl policycoreutils-python openssh-server >/dev/null 2>&1
-curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
-yum -y install gitlab-ce
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash >/dev/null 2>&1
+yum -y install gitlab-ce >/dev/null 2>&1
 #install postfix
 yum -y install postfix >/dev/null 2>&1
 systemctl daemon-reload
@@ -56,9 +56,9 @@ systemctl enable postfix >/dev/null 2>&1
 
 ## Cleanup system >/dev/null 2>&1
 echo ">>>>> [TASK] Cleanup system"
-package-cleanup -y --oldkernels --count=1
-yum -y autoremove
-yum clean all
+package-cleanup -y --oldkernels --count=1 >/dev/null 2>&1
+yum -y autoremove >/dev/null 2>&1
+yum clean all >/dev/null 2>&1
 rm -rf /tmp/*
 rm -f /var/log/wtmp /var/log/btmp
 #dd if=/dev/zero of=/EMPTY bs=1M
