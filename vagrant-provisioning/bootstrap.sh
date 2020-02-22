@@ -29,7 +29,7 @@ systemctl stop firewalld
 
 ## Disable SELinux
 echo ">>>>> [TASK] Disable SELinux"
-setenforce 0
+setenforce 0 >/dev/null 2>&1
 sed -i --follow-symlinks 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/sysconfig/selinux
 
 ## Update hosts file
@@ -45,17 +45,28 @@ EOF
 
 ## Install Gitlab-CE on CentOS 7
 echo ">>>>> [TASK] Install Gitlab-CE on CentOS 7"
-yum -y install curl policycoreutils-python openssh-server >/dev/null 2>&1
-curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash >/dev/null 2>&1
-EXTERNAL_URL="http://gitlab1.testlab.local" yum -y install gitlab-ce >/dev/null 2>&1
+yum -y install curl policycoreutils-python openssh-server
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+EXTERNAL_URL="http://gitlab1.testlab.local" yum -y install gitlab-ce
+mkdir /etc/gitlab/ssl
+chmod 700 /etc/gitlab/ssl
+cp ~/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
+cp ~/testlab.key /etc/gitlab/ssl/gitlab1.testlab.local.key
+chmod 600 /etc/gitlab/ssl/gitlab1.testlab.local.*
+cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.origin
+cp /home/vagrant/gitlab.rb /etc/gitlab/gitlab.rb -f
+gitlab-ctl reconfigure
+gitlab-ctl restart
+## open firewalld allow http/https
 #firewall-cmd --permanent --add-service=http
 #firewall-cmd --permanent --add-service=https
 #systemctl reload firewalld
-##install postfix
+## install postfix
 yum -y install postfix >/dev/null 2>&1
 systemctl daemon-reload
 systemctl start postfix
 systemctl enable postfix >/dev/null 2>&1
+echo ">>>>> Gitlab address: https://gitlab1.testlab.local"
 
 ## Cleanup system >/dev/null 2>&1
 echo ">>>>> [TASK] Cleanup system"
