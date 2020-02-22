@@ -47,7 +47,7 @@ EOF
 echo ">>>>> [TASK] Install Gitlab-CE on CentOS 7"
 yum -y install curl policycoreutils-python openssh-server >/dev/null 2>&1
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash >/dev/null 2>&1
-yum -y install gitlab-ce >/dev/null 2>&1
+EXTERNAL_URL="http://gitlab1.testlab.local" yum -y install gitlab-ce >/dev/null 2>&1
 #install postfix
 yum -y install postfix >/dev/null 2>&1
 systemctl daemon-reload
