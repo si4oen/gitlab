@@ -45,9 +45,9 @@ EOF
 
 ## Install Gitlab-CE on CentOS 7
 echo ">>>>> [TASK] Install Gitlab-CE on CentOS 7"
-yum -y install curl policycoreutils-python openssh-server
-curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
-EXTERNAL_URL="http://gitlab1.testlab.local" yum -y install gitlab-ce
+yum -y install curl policycoreutils-python openssh-server >/dev/null 2>&1
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash >/dev/null 2>&1
+yum -y install gitlab-ce >/dev/null 2>&1
 mkdir /etc/gitlab/ssl
 chmod 700 /etc/gitlab/ssl
 cp ~/testlab.crt /etc/gitlab/ssl/gitlab1.testlab.local.crt
@@ -55,7 +55,7 @@ cp ~/testlab.key /etc/gitlab/ssl/gitlab1.testlab.local.key
 chmod 600 /etc/gitlab/ssl/gitlab1.testlab.local.*
 cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.origin
 cp /home/vagrant/gitlab.rb /etc/gitlab/gitlab.rb -f
-gitlab-ctl reconfigure
+gitlab-ctl reconfigure >/dev/null 2>&1
 gitlab-ctl restart
 ## open firewalld allow http/https
 #firewall-cmd --permanent --add-service=http
